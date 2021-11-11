@@ -39,3 +39,23 @@ Route::post('candidatestore','API\candidateController@store');
 Route::get('candidateshow/{id}','API\candidateController@show');
 Route::get('candidateupdate/{id}','API\candidateController@update');
 Route::get('candidatedelete/{id}','API\candidateController@softDeletes');
+/** Activities Routes */
+Route::get('activitylist','API\ActivityController@index');
+Route::post('activitystore','API\ActivityController@store');
+Route::get('activityshow/{id}','API\ActivityController@show');
+Route::get('activityupdate/{id}','API\ActivityController@update');
+Route::get('activitydelete/{id}','API\ActivityController@softDeletes');
+/** Positions Routes */
+Route::get('positionlist','API\PositionController@index');
+Route::post('positionstore','API\PositionController@store');
+Route::get('positionshow/{id}','API\PositionController@show');
+Route::get('positionupdate/{id}','API\PositionController@update');
+Route::get('positiondelete/{id}','API\PositionController@softDeletes');
+/** Files Routes */
+Route::get('filelist','API\FileController@index');
+Route::post('candidatefilestore','API\FileController@storeCandidate');
+Route::post('positionfilestore','API\FileController@storePosition');
+Route::get('fileshow/{id}','API\FileController@show');
+Route::get('filedelete/{id}','API\FileController@softDeletes');
+
+

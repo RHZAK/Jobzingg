@@ -27,10 +27,8 @@ class CreateCandidatesTable extends Migration
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('country_ID')->references('id')->on('countries')->onDelete('cascade');
-
         });
     }
-
     /**
      * Reverse the migrations.
      *

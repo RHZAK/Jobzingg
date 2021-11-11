@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class CandidateController extends BaseController
-{     /**
+{
+  /**
     * Display a listing of the resource.
     *
     * @return \Illuminate\Http\Response

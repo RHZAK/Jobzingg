@@ -62,7 +62,6 @@ class JobController extends BaseController
             return response()->json($add,200);
     }
 
-
     public function show($id)
     {
         $job=job::find($id);
