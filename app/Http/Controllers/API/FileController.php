@@ -50,14 +50,14 @@ class FileController extends BaseController
 
         $file    = $request->file;
         $newfile = time().$file->getClientOriginalName();
-        $file->move('files/position',$newfile);
+        $file->move('files/candidate',$newfile);
 
         $addfile=File::create([
-            "type"         => 'contract',
-            "model"        => 'position',
+            "type"         => 'resume',
+            "model"        => 'candidate',
             // We have to use the auth to know the id of the selected position
             "model_id"     => 'b51a93c9-1800-4007-9f85-60964d49494f',
-            "file"         => 'files/position/'.$newfile
+            "file"         => 'files/candidate/'.$newfile
         ]);
          return response()->json($addfile,200);
 
@@ -84,14 +84,14 @@ class FileController extends BaseController
 
         $file    = $request->file;
         $newfile = time().$file->getClientOriginalName();
-        $file->move('files/candidate',$newfile);
+        $file->move('files/position',$newfile);
 
         $addfile=File::create([
-            "type"         => 'resume',
-            "model"        => 'candidate',
+            "type"         => 'contract',
+            "model"        => 'position',
             // We have to use the auth to know the user and his Candidate
             "model_id"     => '8cd2714e-55bc-4f7d-8e02-94e82315c7aa',
-            "file"         => 'files/candidate/'.$newfile
+            "file"         => 'files/position/'.$newfile
         ]);
          return response()->json($addfile,200);
 
