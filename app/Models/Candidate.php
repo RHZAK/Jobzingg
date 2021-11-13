@@ -18,4 +18,6 @@ class Candidate extends Model
     {
         return $this->belongsTo('App\country', 'country_ID');
     }
+
+
 }
