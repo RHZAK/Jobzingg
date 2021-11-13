@@ -11,5 +11,5 @@ class File extends Model
 {
     use HasFactory,SoftDeletes,Uuids;
 
-    protected $fillable=['type','model','model_id','file'];
+    protected $fillable=['id','type','model','original_name','model_id','file'];
 }

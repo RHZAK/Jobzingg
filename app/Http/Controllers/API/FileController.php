@@ -4,8 +4,10 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\BaseController;
 use App\Models\File;
+use Faker\Provider\Uuid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\support\str;
 
 class FileController extends BaseController
 {
@@ -49,15 +51,17 @@ class FileController extends BaseController
         }
 
         $file    = $request->file;
-        $newfile = time().$file->getClientOriginalName();
+        $newfile = Str::uuid()->toString();
+
         $file->move('files/candidate',$newfile);
 
         $addfile=File::create([
-            "type"         => 'resume',
-            "model"        => 'candidate',
-            // We have to use the auth to know the id of the selected position
-            "model_id"     => 'b51a93c9-1800-4007-9f85-60964d49494f',
-            "file"         => 'files/candidate/'.$newfile
+            "id"            => $newfile,
+            "type"          => 'resume',
+            "model"         => 'candidate',
+            'original_name' => $file->getClientOriginalName(),            // We have to use the auth to know the id of the selected position
+            "model_id"      => 'b51a93c9-1800-4007-9f85-60964d49494f',
+            "file"          => 'files/candidate/'.$newfile
         ]);
          return response()->json($addfile,200);
 
@@ -83,15 +87,16 @@ class FileController extends BaseController
         }
 
         $file    = $request->file;
-        $newfile = time().$file->getClientOriginalName();
+        $newfile = Str::uuid()->toString();
         $file->move('files/position',$newfile);
 
         $addfile=File::create([
-            "type"         => 'contract',
-            "model"        => 'position',
-            // We have to use the auth to know the user and his Candidate
-            "model_id"     => '8cd2714e-55bc-4f7d-8e02-94e82315c7aa',
-            "file"         => 'files/position/'.$newfile
+            "id"            => $newfile,
+            "type"          => 'contract',
+            "model"         => 'position',
+            'original_name' => $file->getClientOriginalName(),  // We have to use the auth to know the user and his Candidate
+            "model_id"      => '8cd2714e-55bc-4f7d-8e02-94e82315c7aa',
+            "file"          => 'files/position/'.$newfile
         ]);
          return response()->json($addfile,200);
 

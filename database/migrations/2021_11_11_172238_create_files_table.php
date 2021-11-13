@@ -14,9 +14,10 @@ class CreateFilesTable extends Migration
     public function up()
     {
         Schema::create('files', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->text('id')->primary();
             $table->enum('type',['resume','contract']);
             $table->enum('model',['candidate','position']);
+            $table->text('original_name');
             $table->text('model_id');
             $table->text('file');
             $table->softDeletes();
