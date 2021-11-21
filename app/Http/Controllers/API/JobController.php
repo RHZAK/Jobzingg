@@ -6,6 +6,8 @@ use App\Http\Controllers\API\BaseController;
 use App\Models\Job;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class JobController extends BaseController
 {
@@ -29,23 +31,37 @@ class JobController extends BaseController
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+      //show Jobs client of auth user
+
+      public function userclientjob()
+      {
+          $userclientjob_List = DB::table('jobs')
+          ->join('clients', 'clients.id', '=', 'jobs.client_id')
+          ->select('clients.name','jobs.*')->where('clients.user_id',Auth::user()->id)
+          ->get();
+          $userclientjob_Check=$this->send_Response($userclientjob_List);
+
+          if($userclientjob_Check == true){
+
+              return response()->json($userclientjob_Check,200);
+
+          }else{
+
+              return response()->json($userclientjob_Check,404);
+          }
+      }
 
     public function store(Request $request)
     {
         $input = $request->all();
         $validator = validator::make($input,[
-            'client_ID'          => 'required',
-            'contact_clients_ID' => 'required',
+            'client_id'          => 'required',
+            'contact_clients_id' => 'required',
             'title'              => 'required',
             'headcount'          => 'required',
             'address'            => 'required',
             'dead_line'          => 'required',
-            'tgm'                => 'required',
+            'tjm'                => 'required',
             'description'        => 'required',
             'contract_type'      => 'required',
             'location'           => 'required'
@@ -89,13 +105,13 @@ class JobController extends BaseController
         $input=$request->all();
 
         $validator=validator::make($input,[
-            'client_ID'          => 'required',
-            'contact_clients_ID' => 'required',
+            'client_id'          => 'required',
+            'contact_clients_id' => 'required',
             'title'              => 'required',
             'headcount'          => 'required',
             'address'            => 'required',
             'dead_line'          => 'required',
-            'tgm'                => 'required',
+            'tjm'                => 'required',
             'description'        => 'required',
             'contract_type'      => 'required',
             'location'           => 'required'
@@ -105,13 +121,13 @@ class JobController extends BaseController
              return $this->sendError('Please Validate Error',$validator->errors());
         }
 
-         $job->client_ID           = $input['client_ID'];
-         $job->contact_clients_ID  = $input['contact_clients_ID'];
+         $job->client_id           = $input['client_id'];
+         $job->contact_clients_id  = $input['contact_clients_id'];
          $job->title               = $input['title'];
          $job->headcount           = $input['headcount'];
          $job->address             = $input['address'];
          $job->dead_line           = $input['dead_line'];
-         $job->tgm                 = $input['tgm'];
+         $job->tjm                 = $input['tjm'];
          $job->description         = $input['description'];
          $job->contract_type       = $input['contract_type'];
          $job->location            = $input['location'];
