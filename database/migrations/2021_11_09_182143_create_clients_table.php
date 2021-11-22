@@ -15,8 +15,8 @@ class CreateClientsTable extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('user_ID')->unsigned();
-            $table->integer('country_ID')->unsigned();
+            $table->uuid('user_id')->unsigned();
+            $table->integer('country_id')->unsigned();
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone');
@@ -24,8 +24,8 @@ class CreateClientsTable extends Migration
             $table->string('image');
             $table->softDeletes();
             $table->timestamps();
-            $table->foreign('user_ID')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('country_ID')->references('id')->on('countries')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
 
         });
     }

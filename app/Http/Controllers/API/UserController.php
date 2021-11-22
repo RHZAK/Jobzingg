@@ -5,6 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends BaseController
 {
@@ -15,7 +18,7 @@ class UserController extends BaseController
      */
     public function index()
     {
-        $user_List=User::all();
+        $user_List=DB::table('users')->where('id', '=', Auth::user()->id)->get();
         $user_List_Check=$this->send_Response($user_List);
 
         if($user_List_Check == true){
@@ -34,7 +37,7 @@ class UserController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request)
+    public function register(Request $request)
     {
         $input = $request->all();
         $validator = validator::make($input,[
@@ -51,9 +54,25 @@ class UserController extends BaseController
             return response()->json($User_Create_Check,404);
 
         }
+            $input['password']=Hash::make($input['password']);
             $add = user::create($input);
+            $add['token']=$add->createToken('afddz')->accessToken;
             return response()->json($add,200);
     }
+
+    public function login(Request $request)
+    {
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+            $user = Auth::user();
+            $success['token'] =  $user->createToken('MyApp')-> accessToken;
+
+            return $this->send_Response($success, 200);
+        }
+        else{
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        }
+    }
+
 
 
     public function show($id)

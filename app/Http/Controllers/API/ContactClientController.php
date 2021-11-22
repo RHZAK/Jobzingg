@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\BaseController;
+use App\Imports\contactclientImport;
 use App\Models\ContactClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ContactClientController extends BaseController
 {
@@ -29,20 +33,36 @@ class ContactClientController extends BaseController
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    //show contact client of auth user
+
+    public function usercontactclient()
+    {
+        $ContactClient_List = DB::table('contact_clients')
+        ->join('clients', 'clients.id', '=', 'contact_clients.client_id')
+        ->select('contact_clients.*')->where('clients.user_id',Auth::user()->id)
+        ->get();
+        $ContactClient_List_Check=$this->send_Response($ContactClient_List);
+
+        if($ContactClient_List_Check == true){
+
+            return response()->json($ContactClient_List_Check,200);
+
+        }else{
+
+            return response()->json($ContactClient_List_Check,404);
+        }
+    }
+
+
 
     public function store(Request $request)
     {
         $input = $request->all();
         $validator = validator::make($input,[
-            'client_ID'  => 'required',
+            'client_id'  => 'required',
             'first_name' => 'required',
             'last_name'  => 'required',
-            'post'       => 'required',
+            'poste'      => 'required',
             'email'      => 'required',
             'phone'      => 'required',
         ]);
@@ -86,10 +106,10 @@ class ContactClientController extends BaseController
         $input=$request->all();
 
         $validator=validator::make($input,[
-            'client_ID'  => 'required',
+            'client_id'  => 'required',
             'first_name' => 'required',
             'last_name'  => 'required',
-            'post'       => 'required',
+            'poste'       => 'required',
             'email'      => 'required',
             'phone'      => 'required',
          ]);
@@ -98,10 +118,10 @@ class ContactClientController extends BaseController
              return $this->sendError('Please Validate Error',$validator->errors());
         }
 
-         $ContactClient->client_ID   = $input['client_ID'];
+         $ContactClient->client_id   = $input['client_id'];
          $ContactClient->first_name  = $input['first_name'];
          $ContactClient->last_name   = $input['last_name'];
-         $ContactClient->post        = $input['post'];
+         $ContactClient->poste       = $input['poste'];
          $ContactClient->phone       = $input['phone'];
          $ContactClient->email       = $input['email'];
          $ContactClient->phone       = $input['phone'];
@@ -127,6 +147,13 @@ class ContactClientController extends BaseController
             return response()->json($ContactClient_check,200);
 
         }
+    }
+
+    //Import Client List In Excel Format
+
+    public function importcontactclient(Request $request){
+       Excel::import( new contactclientImport,$request->file);
+       return response()->json('Success',200);
     }
 
 }

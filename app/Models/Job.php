@@ -12,16 +12,16 @@ class Job extends Model
     use HasFactory,SoftDeletes,Uuids;
 
 
-    protected $fillable=['client_ID','contact_clients_ID','title','headcount','address','dead_line','tgm','description','contract_type','location'];
+    protected $fillable=['client_id','contact_clients_id','title','headcount','address','dead_line','tjm','description','contract_type','location'];
 
 
     public function contact_client()
     {
-        return $this->belongsTo('App\contact_client', 'contact_clients_ID');
+        return $this->belongsTo('App\contact_client', 'contact_clients_id');
     }
 
     public function client()
     {
-        return $this->belongsTo('App\client', 'client_ID');
+        return $this->belongsTo('App\client', 'client_id');
     }
 }

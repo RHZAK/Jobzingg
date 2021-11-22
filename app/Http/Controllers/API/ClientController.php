@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exports\clientExport;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Imports\clientImport;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class ClientController extends BaseController
@@ -40,13 +45,11 @@ class ClientController extends BaseController
     {
         $input = $request->all();
         $validator = validator::make($input,[
-            'user_ID'    => 'required',
-            'country_ID' => 'required',
+            'country_id' => 'required',
             'name'       => 'required',
             'email'      => 'required',
             'phone'      => 'required',
-            'address'    => 'required',
-            'image'      => 'required'
+            'address'    => 'required'
         ]);
 
         $client_Create_Check=$this->send_Response($input);
@@ -56,10 +59,36 @@ class ClientController extends BaseController
             return response()->json($client_Create_Check,404);
 
         }
-            $add = client::create($input);
+
+            $add=client::create([
+                "user_id"      => Auth::user()->id,
+                "country_id"   => $request->country_id,
+                "name"         => $request->name,
+                "email"        => $request->email,
+                "phone"        => $request->phone,
+                "address"      => $request->address,
+                "image"        => "img/profile-icon.jpg",
+            ]);
             return response()->json($add,200);
     }
 
+
+    //Function to show client created by user
+    public function userclient(){
+
+        $userclient=client::where('user_id',Auth::user()->id)->get();
+
+        if(is_null($userclient)){
+
+            return response()->json($userclient,404);
+
+        }else{
+
+            return response()->json($userclient,200);
+
+        }
+
+    }
 
     public function show($id)
     {
@@ -67,14 +96,15 @@ class ClientController extends BaseController
 
         if(is_null($client)){
 
-            return response()->json($client,404);
+          return response()->json($client,404);
 
         }else{
 
-            return response()->json($client,200);
+          return response()->json($client,200);
 
         }
     }
+
 
 
     public function update(Request $request, $id)
@@ -88,8 +118,7 @@ class ClientController extends BaseController
         $input=$request->all();
 
         $validator=validator::make($input,[
-            'user_ID'    => 'required',
-            'country_ID' => 'required',
+            'country_id' => 'required',
             'name'       => 'required',
             'email'      => 'required',
             'phone'      => 'required',
@@ -101,8 +130,12 @@ class ClientController extends BaseController
              return $this->sendError('Please Validate Error',$validator->errors());
         }
 
-         $client->user_ID     = $input['user_ID'];
-         $client->country_ID  = $input['country_ID'];
+        if($client->user_id != Auth::user()->id){
+            return $this->sendError('Client Does Not Belong To You !!');
+        }
+
+         $client->user_id     = Auth::user()->id;
+         $client->country_id  = $input['country_id'];
          $client->name        = $input['name'];
          $client->email       = $input['email'];
          $client->phone       = $input['phone'];
@@ -118,6 +151,7 @@ class ClientController extends BaseController
     public function softDeletes($id)
     {
         $client=client::find($id);
+
         $client_check=$this->send_Response($client);
 
         if(is_null($client)){
@@ -126,9 +160,27 @@ class ClientController extends BaseController
 
         }else{
 
+            if($client->user_id != Auth::user()->id){
+                return $this->sendError('Client Does Not Belong To You !!');
+            }
+
             $client->delete();
             return response()->json($client_check,200);
 
         }
+    }
+
+
+    //Import Client List In Excel Format
+
+    public function importclient(Request $request){
+       Excel::import( new clientImport,$request->file);
+       return response()->json('Success',200);
+    }
+
+    // Export Data Excel File
+
+    public function exportExcel(){
+        return Excel::download(new clientExport,'client.xlsx');
     }
 }

@@ -60,7 +60,7 @@ class FileController extends BaseController
             "type"          => 'resume',
             "model"         => 'candidate',
             'original_name' => $file->getClientOriginalName(),            // We have to use the auth to know the id of the selected position
-            "model_id"      => 'b51a93c9-1800-4007-9f85-60964d49494f',
+            "model_id"      => 'f54aa8e1-c140-445b-a315-2214bdc6a821',
             "file"          => 'files/candidate/'.$newfile
         ]);
          return response()->json($addfile,200);
@@ -95,7 +95,7 @@ class FileController extends BaseController
             "type"          => 'contract',
             "model"         => 'position',
             'original_name' => $file->getClientOriginalName(),  // We have to use the auth to know the user and his Candidate
-            "model_id"      => '8cd2714e-55bc-4f7d-8e02-94e82315c7aa',
+            "model_id"      => 'ce3c5edb-7037-4139-86ea-782dfcc37e3c',
             "file"          => 'files/position/'.$newfile
         ]);
          return response()->json($addfile,200);

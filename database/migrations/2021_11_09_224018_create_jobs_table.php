@@ -15,20 +15,20 @@ class CreateJobsTable extends Migration
     {
         Schema::create('jobs', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('client_ID')->unsigned();
-            $table->uuid('contact_clients_ID')->unsigned();
+            $table->uuid('client_id')->unsigned();
+            $table->uuid('contact_clients_id')->unsigned();
             $table->string('title');
             $table->text('headcount');
             $table->text('address');
             $table->date('dead_line');
-            $table->string('tgm');
+            $table->string('tjm');
             $table->text('description');
             $table->enum('contract_type',['FullTime','PartTime','FreeLance','Temporary']);
             $table->enum('location',['Remote','On-Site']);
             $table->softDeletes();
             $table->timestamps();
-            $table->foreign('client_ID')->references('id')->on('clients')->onDelete('cascade');
-            $table->foreign('contact_clients_ID')->references('id')->on('contact_clients')->onDelete('cascade');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+            $table->foreign('contact_clients_id')->references('id')->on('contact_clients')->onDelete('cascade');
         });
     }
 

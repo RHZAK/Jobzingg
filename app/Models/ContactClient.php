@@ -11,11 +11,11 @@ class ContactClient extends Model
 {
     use HasFactory,SoftDeletes,Uuids;
 
-    protected $fillable=['client_ID','first_name','last_name','post','email','phone'];
+    protected $fillable=['client_id','first_name','last_name','poste','email','phone'];
 
     public function client()
     {
-        return $this->belongsTo('App\client', 'client_ID');
+        return $this->belongsTo('App\client', 'client_id');
     }
 
     public function job()

@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\BaseController;
+use App\Imports\candidateImport;
 use App\Models\Candidate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Auth;
+use App\Exports\candidateExport;
+use Illuminate\Support\Facades\DB;
 
 class CandidateController extends BaseController
 {
@@ -29,18 +34,31 @@ class CandidateController extends BaseController
        }
    }
 
-   /**
-    * Show the form for creating a new resource.
-    *
-    * @return \Illuminate\Http\Response
-    */
+   //show candidate of auth user
+
+   public function usercandidate()
+   {
+       $ContactClient_List = DB::table('candidates')
+       ->where('candidates.user_id',Auth::user()->id)->get();
+
+       $ContactClient_List_Check=$this->send_Response($ContactClient_List);
+
+       if($ContactClient_List_Check == true){
+
+           return response()->json($ContactClient_List_Check,200);
+
+       }else{
+
+           return response()->json($ContactClient_List_Check,404);
+       }
+   }
 
    public function store(Request $request)
    {
 
        $input = $request->all();
        $validator = validator::make($input,[
-        'country_ID'            => 'required',
+        'country_id'            => 'required',
         'name'                  => 'required',
         'phone'                 => 'required',
         'email'                 => 'required',
@@ -57,10 +75,22 @@ class CandidateController extends BaseController
 
            return response()->json($Candidate_Create_Check,404);
 
-       }
-           $add = Candidate::create($input);
+        }
+
+        $add=Candidate::create([
+            "user_id"      => Auth::user()->id,
+            "country_id"   => $request->country_id,
+            "name"         => $request->name,
+            "phone"        => $request->phone,
+            "email"        => $request->email,
+            "address"      => $request->address,
+            'description'           => $request->description,
+            'gender'                => $request->gender,
+            'birthday'              => $request->birthday,
+            'year_first_experience' => $request->year_first_experience
+        ]);
            return response()->json($add,200);
-   }
+    }
 
 
    public function show($id)
@@ -72,6 +102,9 @@ class CandidateController extends BaseController
            return response()->json($Candidate,404);
 
        }else{
+
+          // $file=getCandidateResume($id);
+          $candidate['file']=getCandidateResume($id);
 
            return response()->json($Candidate,200);
 
@@ -86,11 +119,10 @@ class CandidateController extends BaseController
        if(is_null($Candidate)){
            return response()->json($Candidate,404);
        }
-
        $input=$request->all();
 
        $validator=validator::make($input,[
-        'country_ID'            => 'required',
+        'country_id'            => 'required',
         'name'                  => 'required',
         'phone'                 => 'required',
         'email'                 => 'required',
@@ -105,7 +137,10 @@ class CandidateController extends BaseController
             return $this->sendError('Please Validate Error',$validator->errors());
        }
 
-        $Candidate->country_ID            = $input['country_ID'];
+       if($Candidate->user_id != Auth::user()->id){
+           return $this->sendError('Client Does Not Belong To You !!');
+       }
+        $Candidate->country_id            = $input['country_id'];
         $Candidate->name                  = $input['name'];
         $Candidate->phone                 = $input['phone'];
         $Candidate->email                 = $input['email'];
@@ -132,10 +167,27 @@ class CandidateController extends BaseController
 
        }else{
 
-           $Candidate->delete();
-           return response()->json($Candidate_check,200);
+           if($Candidate->user_id != Auth::user()->id){
+             return $this->sendError('Client Does Not Belong To You !!');
+            }
+
+        $Candidate->delete();
+        return response()->json($Candidate_check,200);
 
        }
    }
+
+    //Import Candidate List In Excel Format
+
+    public function importcandidate(Request $request){
+        Excel::import( new candidateImport,$request->file);
+        return response()->json('Success',200);
+    }
+
+    // Export Data Excel File
+
+    public function exportExcel(){
+        return Excel::download(new CandidateExport,'candidate.xlsx');
+    }
 
 }

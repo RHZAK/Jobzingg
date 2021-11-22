@@ -15,18 +15,20 @@ class CreateCandidatesTable extends Migration
     {
         Schema::create('candidates', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->integer('country_ID')->unsigned();
+            $table->uuid('user_id')->unsigned();
+            $table->integer('country_id')->unsigned();
             $table->string('name');
             $table->string('phone');
             $table->string('email');
             $table->string('address');
             $table->text('description');
             $table->enum('gender',['Male','Female']);
-            $table->date('birthday');
+            $table->string('birthday');
             $table->integer('year_first_experience');
             $table->softDeletes();
             $table->timestamps();
-            $table->foreign('country_ID')->references('id')->on('countries')->onDelete('cascade');
+            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
     /**

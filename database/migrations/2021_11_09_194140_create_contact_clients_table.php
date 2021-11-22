@@ -15,15 +15,15 @@ class CreateContactClientsTable extends Migration
     {
         Schema::create('contact_clients', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('client_ID')->unsigned();
+            $table->uuid('client_id')->unsigned();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('post');
+            $table->string('poste');
             $table->string('email');
             $table->string('phone');
             $table->softDeletes();
             $table->timestamps();
-            $table->foreign('client_ID')->references('id')->on('clients')->onDelete('cascade');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
 
         });
     }

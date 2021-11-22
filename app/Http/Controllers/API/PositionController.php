@@ -66,7 +66,9 @@ class PositionController extends BaseController
 
         }else{
 
-            return response()->json($Position,200);
+            $file = getPositionContract($id);
+
+            return response()->json(['position' => $Position,'file' => $file],200);
 
         }
     }
