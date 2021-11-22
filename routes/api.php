@@ -92,6 +92,11 @@ Route::post('notestore','API\NoteController@store');
 Route::get('noteshow/{id}','API\NoteController@show');
 Route::get('noteupdate/{id}','API\NoteController@update');
 Route::get('notedelete/{id}','API\NoteController@softDeletes');
+/** Contract Routes */
+Route::get('contractlist','API\ContractController@index');
+Route::post('contractstore','API\ContractController@store');
+Route::get('contractshow/{id}','API\ContractController@show');
+Route::get('contractdelete/{id}','API\ContractController@softDeletes');
 
 
 //import
