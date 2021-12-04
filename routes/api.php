@@ -101,7 +101,6 @@ Route::get('contractdelete/{id}','API\ContractController@softDeletes');
 
 //import
 Route::post('importclient','API\clientController@importclient');
-/*test c*/Route::post('importc','API\CController@importcandidate');
 Route::post('importcandidate','API\CandidateController@importcandidate');
 Route::post('importcontactclient','API\ContactClientController@importcontactclient');
 

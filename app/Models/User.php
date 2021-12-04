@@ -13,7 +13,7 @@ class User extends Authenticatable
 {
     use HasFactory,HasApiTokens,SoftDeletes,Uuids;
 
-    protected $fillable = ['first_name','last_name','email','password',];
+    protected $fillable = ['first_name','last_name','email','password'];
 
 
 }
