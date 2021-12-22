@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->uuid('id')->primary();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('email');
+            $table->string('email')->unique();
             $table->string('password');
             $table->string('global_id')->unique();
             $table->softDeletes();
@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

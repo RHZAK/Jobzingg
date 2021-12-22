@@ -8,16 +8,34 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 */
-//Register Route
-Route::post('userregister','API\UserController@register');
-//Login Route
-Route::post('userlogin','API\UserController@login');
+//tenant
+Route::middleware([
+    'api',
+    InitializeTenancyByDomain::class,
+    PreventAccessFromCentralDomains::class,
+])->group(function () {
+    Route::get('/', function () {
+        return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
+    });
+});
+Route::group([
+    'prefix' => '/{tenant}',
+    'middleware' => [InitializeTenancyByPath::class],
+], function () {
+    Route::get('/foo', 'FooController@index');
+});
+//tenant
 
+//Register Route
+Route::post('userregister','API\CentralUserController@register');
+//Login Route
+Route::post('userlogin','API\CentralUserController@login');
+
+Route::get('userlist','API\UserController@index');
 
 Route::middleware('auth:api')->group( function (){
 
 /** Users Routes */
-Route::get('userlist','API\UserController@index');
 Route::get('usershow/{id}','API\UserController@show');
 Route::get('userupdate/{id}','API\UserController@update');
 Route::get('userdelete/{id}','API\UserController@softDeletes');
@@ -107,7 +125,6 @@ Route::post('importcontactclient','API\ContactClientController@importcontactclie
 
 
 });
-
 //Export
 Route::get('exportclient-excel','API\ClientController@exportExcel');
 Route::get('exportcandidate-excel','API\CandidateController@exportExcel');

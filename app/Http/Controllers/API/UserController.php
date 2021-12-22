@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\User;
+use App\Models\CentralUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Tenant;
+use Illuminate\Support\Str;
 
 class UserController extends BaseController
 {
@@ -37,27 +40,21 @@ class UserController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-    public function register(Request $request)
-    {
-        $input = $request->all();
-        $validator = validator::make($input,[
-            'first_name' => 'required',
-            'last_name'  => 'required',
-            'email'      => 'required',
-            'password'   => 'required'
-        ]);
 
-        $User_Create_Check=$this->send_Response($input);
 
-        if($validator->fails() || $User_Create_Check == false){
+    public function login_test(Request $request){
 
-            return response()->json($User_Create_Check,404);
-
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+            // $user = CentralUser::where('email', $email)->with('tenants')->first();
+            // $user = Auth::user();
+            // $success['token'] =  $user->createToken('MyApp')-> accessToken;
+            // return $this->send_Response($success, 200);
+            return true;
         }
-            $input['password']=Hash::make($input['password']);
-            $add = user::create($input);
-            $add['token']=$add->createToken('afddz')->accessToken;
-            return response()->json($add,200);
+        else{
+            return 'false';
+            // return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        }
     }
 
     public function login(Request $request)

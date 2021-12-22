@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
+
 class UserFactory extends Factory
 {
     /**
@@ -15,7 +16,7 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'id'  => 'ee3f32a5-1d92-4fba-bc76-a95a5201d88d',
+            'id'  => Str::uuid()->toString(),
             'first_name' => $this->faker->name(),
             'last_name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),

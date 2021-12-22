@@ -4,16 +4,41 @@ namespace App\Models;
 
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
+use Stancl\Tenancy\Contracts\Syncable;
+use Stancl\Tenancy\Database\Concerns\ResourceSyncing;
 
-
-class User extends Authenticatable
+class User extends Model implements Syncable
 {
-    use HasFactory,HasApiTokens,SoftDeletes,Uuids;
+    use HasFactory,HasApiTokens,SoftDeletes,Uuids,ResourceSyncing;
+
+    protected $guarded = [];
+    public $timestamps = false;
 
     protected $fillable = ['first_name','last_name','email','password'];
+
+
+    public function getGlobalIdentifierKey()
+    {
+        return $this->getAttribute($this->getGlobalIdentifierKeyName());
+    }
+
+    public function getGlobalIdentifierKeyName(): string
+    {
+        return 'global_id';
+    }
+
+    public function getCentralModelName(): string
+    {
+        return CentralUser::class;
+    }
+
+    public function getSyncedAttributeNames(): array
+    {
+        return ['first_name','last_name','email','password'];
+    }
 
 
 }
