@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Laravel\Passport\ClientRepository;
 
 class CreateOauthPersonalAccessClientsTable extends Migration
 {
@@ -35,6 +36,9 @@ class CreateOauthPersonalAccessClientsTable extends Migration
             $table->unsignedBigInteger('client_id');
             $table->timestamps();
         });
+        $client = new ClientRepository();
+        $client->createPasswordGrantClient(null, 'Default password grant client', 'http://your.redirect.path');
+        $client->createPersonalAccessClient(null, 'Default personal access client', 'http://your.redirect.path');
     }
 
     /**

@@ -11,7 +11,7 @@ use Stancl\Tenancy\Database\Models\TenantPivot;
 
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
-    use HasDatabase, HasDomains;
+    use HasDatabase ;
 
     public function users()
     {

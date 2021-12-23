@@ -1,7 +1,11 @@
 <?php
 
+use App\Models\Client;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Features\UserImpersonation;
+use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,22 +16,14 @@ use Stancl\Tenancy\Features\UserImpersonation;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-/*
-Route::get('/', function () {
-    return view('welcome');
-});
-*/
-Route::middleware([
-    'web',
-    InitializeTenancyByDomain::class,
-    PreventAccessFromCentralDomains::class,
-])->group(function () {
+Route::group([
+    'prefix' => '/{tenant}',
+    'middleware' => [InitializeTenancyByPath::class],
+], function () {
     Route::get('/', function () {
+        // dd('khalid');
+        dd(Client::all());
+        
         return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
     });
-});
-
-Route::get('/impersonate/{token}', function ($token) {
-    return UserImpersonation::makeResponse($token);
 });

@@ -34,15 +34,16 @@ class CentralUserController extends BaseController
 
         //tenant creation and Central user
         $id = Str::uuid()->toString();
-        $tenant = Tenant::create(['id'=>'_'.$request->last_name.'_'.$id]);
-        $tenant->domains()->create(['domain' => $request->last_name.'_'.$id.'.localhost']);
+        // $tenant = Tenant::create(['id'=>'_'.$request->last_name.'_'.$id]);
+        $tenant = Tenant::create(['id'=>'_'.$request->last_name]);
+        // $tenant->domains()->create(['domain' => $request->last_name.'_'.$id.'.localhost']);
         tenancy()->initialize($tenant);
 
 
         $gid= Str::uuid()->toString();
         $password= Hash::make($request->password);
 
-        $user = CentralUser::create([
+        $userC = CentralUser::create([
             'id'         => $id,
             'global_id'  => $gid,
             'first_name' => $request->first_name,
@@ -59,6 +60,9 @@ class CentralUserController extends BaseController
             'email'      => $request->email,
             'password'   => $password,
         ]);
+
+        // Attacher le tenant to user
+        // $userC->tenants()->attach($tenant);
         $user['token']=$user->createToken('app')->accessToken;
 
            // $add = user::create($input);
@@ -69,19 +73,43 @@ class CentralUserController extends BaseController
 
     //Login//
 
+
     public function login(Request $request){
-
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
-             $user = CentralUser::where('email', $request->email)->with('tenants')->first();
-
-             //$user = user::tenants()->id;
-             $user['token'] =  $user->createToken('MyApp')-> accessToken;
-
-             return $this->send_Response($user, 200);
-
+        $login_credentials=[
+            'email'=>$request->email,
+            'password'=>$request->password,
+        ];
+        // dd(auth());
+        if(Auth::attempt($login_credentials)){
+            //generate the token for the user
+            // dd(auth()->user());
+            $user = auth()->user;
+            $user_login_token= $user->createToken('test')->accessToken;
+            //now return this token on success login attempt
+            
+            return response()->json(['token' => $user_login_token], 200);
         }
         else{
-             return $this->sendError('Error',404);
+            //wrong login credentials, return, user not authorised to our system, return error code 401
+            return response()->json(['error' => 'UnAuthorised Access'], 401);
         }
     }
+
+    // public function login(Request $request){
+
+    //     if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+            
+    //         dd(Auth::user());
+    //         //  $user = CentralUser::where('email', $request->email)->with('tenants')->first();
+            
+    //         //  //$user = user::tenants()->id;
+    //         //  $user['token'] =  $user->createToken('MyApp')-> accessToken;
+
+    //          return $this->send_Response($user, 200);
+
+    //     }
+    //     else{
+    //          return $this->sendError('Error',404);
+    //     }
+    // }
 }

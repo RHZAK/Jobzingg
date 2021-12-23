@@ -14,7 +14,8 @@ class CreateFilesTable extends Migration
     public function up()
     {
         Schema::create('files', function (Blueprint $table) {
-            $table->text('id')->primary();
+            // $table->text('id')->primary();
+            $table->id();
             $table->enum('type',['resume','contract']);
             $table->enum('model',['candidate','position']);
             $table->text('original_name');

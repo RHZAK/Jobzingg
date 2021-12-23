@@ -10,14 +10,16 @@ use Laravel\Passport\HasApiTokens;
 use Stancl\Tenancy\Contracts\Syncable;
 use Stancl\Tenancy\Database\Concerns\ResourceSyncing;
 
+// use Stancl\Tenancy\Database\Concerns\ResourceSyncing;
+
 class User extends Model implements Syncable
 {
-    use HasFactory,HasApiTokens,SoftDeletes,Uuids,ResourceSyncing;
+    use SoftDeletes, Uuids, ResourceSyncing , HasApiTokens;
 
     protected $guarded = [];
     public $timestamps = false;
 
-    protected $fillable = ['first_name','last_name','email','password'];
+    protected $fillable = ['first_name', 'last_name', 'email', 'password'];
 
 
     public function getGlobalIdentifierKey()
@@ -37,8 +39,6 @@ class User extends Model implements Syncable
 
     public function getSyncedAttributeNames(): array
     {
-        return ['first_name','last_name','email','password'];
+        return ['first_name', 'last_name', 'email', 'password'];
     }
-
-
 }
