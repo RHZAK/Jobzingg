@@ -72,7 +72,6 @@ class ClientController extends BaseController
             return response()->json($add,200);
     }
 
-
     //Function to show client created by user
     public function userclient(){
 
