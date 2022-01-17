@@ -63,7 +63,7 @@ class CandidateController extends BaseController
         'phone'                 => 'required',
         'email'                 => 'required',
         'address'               => 'required',
-        'description'           => 'required',
+        'image'                 => 'required',
         'gender'                => 'required',
         'birthday'              => 'required',
         'year_first_experience' => 'required'
@@ -84,7 +84,7 @@ class CandidateController extends BaseController
             "phone"        => $request->phone,
             "email"        => $request->email,
             "address"      => $request->address,
-            'description'           => $request->description,
+            'image'        => "img/profile-icon.jpg",
             'gender'                => $request->gender,
             'birthday'              => $request->birthday,
             'year_first_experience' => $request->year_first_experience
@@ -103,8 +103,8 @@ class CandidateController extends BaseController
 
        }else{
 
-          // $file=getCandidateResume($id);
-          $candidate['file']=getCandidateResume($id);
+           // $file=getCandidateResume($id);
+           $candidate['file']=getCandidateResume($id);
 
            return response()->json($Candidate,200);
 
@@ -127,7 +127,7 @@ class CandidateController extends BaseController
         'phone'                 => 'required',
         'email'                 => 'required',
         'address'               => 'required',
-        'description'           => 'required',
+        'image'                 => 'required',
         'gender'                => 'required',
         'birthday'              => 'required',
         'year_first_experience' => 'required'
@@ -145,7 +145,7 @@ class CandidateController extends BaseController
         $Candidate->phone                 = $input['phone'];
         $Candidate->email                 = $input['email'];
         $Candidate->address               = $input['address'];
-        $Candidate->description           = $input['description'];
+        $Candidate->image                 = $input['image'];
         $Candidate->gender                = $input['gender'];
         $Candidate->birthday              = $input['birthday'];
         $Candidate->year_first_experience = $input['year_first_experience'];

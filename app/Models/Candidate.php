@@ -13,7 +13,7 @@ class Candidate extends Model
 {
     use HasFactory,SoftDeletes,Uuids;
 
-    protected $fillable=['user_id','country_id','name','phone','email','address','description','gender','birthday','year_first_experience'];
+    protected $fillable=['user_id','country_id','name','phone','email','address','image','gender','birthday','year_first_experience'];
 
 
     public function country()

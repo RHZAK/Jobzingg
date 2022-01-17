@@ -93,6 +93,9 @@ Route::group([
         Route::get('contractshow/{id}', 'API\ContractController@show');
         Route::get('contractdelete/{id}', 'API\ContractController@softDeletes');
 
+        //Countries
+        Route::get('countries', 'API\CountryController@index');
+
         //import
         Route::post('importclient', 'API\clientController@importclient');
         Route::post('importcandidate', 'API\CandidateController@importcandidate');

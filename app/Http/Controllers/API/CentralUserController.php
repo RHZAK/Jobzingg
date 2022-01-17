@@ -94,8 +94,8 @@ class CentralUserController extends BaseController
         $user = User::where('email', $request->email)->first();
         if ($user) {
             if (Hash::check($request->password, $user->password)) {
-                $token    = $user->createToken('Laravel Password Grant Client')->accessToken;
-                $response = ['user' => $user,'token' => $token];
+                $user['token']    = $user->createToken('Laravel Password Grant Client')->accessToken;
+                $response = ['user' => $user,'tenant' => $tenant];
                 return response($response, 200);
             } else {
                 $response = ["message" => "Password mismatch"];

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOauthAccessTokensTable extends Migration
+class CreateOauthPersonalAccessClientsTable extends Migration
 {
     /**
      * The database schema.
@@ -30,15 +30,10 @@ class CreateOauthAccessTokensTable extends Migration
      */
     public function up()
     {
-        $this->schema->create('oauth_access_tokens', function (Blueprint $table) {
-            $table->string('id', 100)->primary();
-            $table->uuid('user_id');
-            $table->unsignedBigInteger('client_id');
-            $table->string('name')->nullable();
-            $table->text('scopes')->nullable();
-            $table->boolean('revoked');
+        $this->schema->create('oauth_personal_access_clients', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->uuid('client_id');
             $table->timestamps();
-            $table->dateTime('expires_at')->nullable();
         });
     }
 
@@ -49,7 +44,7 @@ class CreateOauthAccessTokensTable extends Migration
      */
     public function down()
     {
-        $this->schema->dropIfExists('oauth_access_tokens');
+        $this->schema->dropIfExists('oauth_personal_access_clients');
     }
 
     /**
