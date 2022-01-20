@@ -22,7 +22,7 @@ class UserController extends BaseController
      */
     public function index()
     {
-        $user_List=DB::table('users')->where('id', '=', Auth::user()->id)->get();
+        $user_List=User::all();
         $user_List_Check=$this->send_Response($user_List);
 
         if($user_List_Check == true){

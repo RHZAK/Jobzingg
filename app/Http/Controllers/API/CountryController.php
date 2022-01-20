@@ -13,7 +13,7 @@ class CountryController extends BaseController
 
         if($country_List_Check == true){
 
-            return response()->json($country_List_Check,200);
+            return response()->json($country_List,200);
 
         }else{
 

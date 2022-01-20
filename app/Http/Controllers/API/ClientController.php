@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Imports\clientImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
-
-
+use Illuminate\Support\Facades\DB;
 
 class ClientController extends BaseController
 {
@@ -22,7 +21,11 @@ class ClientController extends BaseController
      */
     public function index()
     {
-        $client_List=client::all();
+        $client_List=DB::table('clients')
+        ->join('countries', 'countries.country_id', '=', 'clients.country_id')
+        ->select('clients.*','countries.country')->where('deleted_at','=',null)
+        ->get();
+
         $client_List_Check=$this->send_Response($client_List);
 
         if($client_List_Check == true){
@@ -61,13 +64,13 @@ class ClientController extends BaseController
         }
 
             $add=client::create([
-                "user_id"      => Auth::user()->id,
+                "user_id"      => $request->user_id,
                 "country_id"   => $request->country_id,
                 "name"         => $request->name,
                 "email"        => $request->email,
                 "phone"        => $request->phone,
                 "address"      => $request->address,
-                "image"        => "img/profile-icon.jpg",
+                "image"        => $request->image,
             ]);
             return response()->json($add,200);
     }
@@ -117,6 +120,7 @@ class ClientController extends BaseController
         $input=$request->all();
 
         $validator=validator::make($input,[
+            'user_id' => 'required',
             'country_id' => 'required',
             'name'       => 'required',
             'email'      => 'required',
@@ -129,11 +133,11 @@ class ClientController extends BaseController
              return $this->sendError('Please Validate Error',$validator->errors());
         }
 
-        if($client->user_id != Auth::user()->id){
-            return $this->sendError('Client Does Not Belong To You !!');
-        }
+        // if($client->user_id != Auth::user()->id){
+        //     return $this->sendError('Client Does Not Belong To You !!');
+        // }
 
-         $client->user_id     = Auth::user()->id;
+         $client->user_id     = $input['user_id'];
          $client->country_id  = $input['country_id'];
          $client->name        = $input['name'];
          $client->email       = $input['email'];
@@ -159,9 +163,9 @@ class ClientController extends BaseController
 
         }else{
 
-            if($client->user_id != Auth::user()->id){
-                return $this->sendError('Client Does Not Belong To You !!');
-            }
+            // if($client->user_id != Auth::user()->id){
+            //     return $this->sendError('Client Does Not Belong To You !!');
+            // }
 
             $client->delete();
             return response()->json($client_check,200);

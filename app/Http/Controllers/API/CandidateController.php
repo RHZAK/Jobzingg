@@ -21,7 +21,10 @@ class CandidateController extends BaseController
     */
    public function index()
    {
-       $Candidate_List=Candidate::all();
+       $Candidate_List=DB::table('candidates')
+       ->join('countries', 'countries.country_id', '=', 'candidates.country_id')
+       ->select('candidates.*','countries.country')->where('deleted_at','=',null)
+       ->get();
        $Candidate_List_Check=$this->send_Response($Candidate_List);
 
        if($Candidate_List_Check == true){
@@ -35,7 +38,6 @@ class CandidateController extends BaseController
    }
 
    //show candidate of auth user
-
    public function usercandidate()
    {
        $ContactClient_List = DB::table('candidates')
@@ -59,6 +61,7 @@ class CandidateController extends BaseController
        $input = $request->all();
        $validator = validator::make($input,[
         'country_id'            => 'required',
+        'user_id'               => 'required',
         'name'                  => 'required',
         'phone'                 => 'required',
         'email'                 => 'required',
@@ -78,7 +81,7 @@ class CandidateController extends BaseController
         }
 
         $add=Candidate::create([
-            "user_id"      => Auth::user()->id,
+            "user_id"      => $request->user_id,
             "country_id"   => $request->country_id,
             "name"         => $request->name,
             "phone"        => $request->phone,
@@ -123,6 +126,7 @@ class CandidateController extends BaseController
 
        $validator=validator::make($input,[
         'country_id'            => 'required',
+        'user_id'               => 'required',
         'name'                  => 'required',
         'phone'                 => 'required',
         'email'                 => 'required',
@@ -137,10 +141,11 @@ class CandidateController extends BaseController
             return $this->sendError('Please Validate Error',$validator->errors());
        }
 
-       if($Candidate->user_id != Auth::user()->id){
-           return $this->sendError('Client Does Not Belong To You !!');
-       }
+    //    if($Candidate->user_id != Auth::user()->id){
+    //        return $this->sendError('Client Does Not Belong To You !!');
+    //    }
         $Candidate->country_id            = $input['country_id'];
+        $Candidate->user_id               = $input['user_id'];
         $Candidate->name                  = $input['name'];
         $Candidate->phone                 = $input['phone'];
         $Candidate->email                 = $input['email'];
@@ -167,9 +172,9 @@ class CandidateController extends BaseController
 
        }else{
 
-           if($Candidate->user_id != Auth::user()->id){
-             return $this->sendError('Client Does Not Belong To You !!');
-            }
+        //    if($Candidate->user_id != Auth::user()->id){
+        //      return $this->sendError('Client Does Not Belong To You !!');
+        //     }
 
         $Candidate->delete();
         return response()->json($Candidate_check,200);

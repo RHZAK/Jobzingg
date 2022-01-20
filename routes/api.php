@@ -13,6 +13,7 @@ Route::group([
 ], function () {
     Route::middleware('auth:api')->group(function () {
         /** Users Routes */
+        Route::get('userlist', 'API\UserController@index');
         Route::get('usershow/{id}', 'API\UserController@show');
         Route::get('userupdate/{id}', 'API\UserController@update');
         Route::get('userdelete/{id}', 'API\UserController@softDeletes');
@@ -21,7 +22,7 @@ Route::group([
         Route::post('clientstore', 'API\ClientController@store');
         Route::get('clientshow/{id}', 'API\ClientController@show');
         Route::get('userclientshow', 'API\ClientController@userclient');
-        Route::get('clientupdate/{id}', 'API\ClientController@update');
+        Route::put('clientupdate/{id}', 'API\ClientController@update');
         Route::get('clientdelete/{id}', 'API\ClientController@softDeletes');
         /** ContactClients Routes */
         Route::get('contactclientlist', 'API\ContactClientController@index');
@@ -42,7 +43,7 @@ Route::group([
         Route::get('usercandidate', 'API\candidateController@usercandidate');
         Route::post('candidatestore', 'API\candidateController@store');
         Route::get('candidateshow/{id}', 'API\candidateController@show');
-        Route::get('candidateupdate/{id}', 'API\candidateController@update');
+        Route::put('candidateupdate/{id}', 'API\candidateController@update');
         Route::get('candidatedelete/{id}', 'API\candidateController@softDeletes');
         /** Activities Routes */
         Route::get('activitylist', 'API\ActivityController@index');
