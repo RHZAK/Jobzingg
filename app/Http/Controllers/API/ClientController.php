@@ -69,8 +69,7 @@ class ClientController extends BaseController
                 "name"         => $request->name,
                 "email"        => $request->email,
                 "phone"        => $request->phone,
-                "address"      => $request->address,
-                "image"        => $request->image,
+                "address"      => $request->address
             ]);
             return response()->json($add,200);
     }
@@ -120,13 +119,11 @@ class ClientController extends BaseController
         $input=$request->all();
 
         $validator=validator::make($input,[
-            'user_id' => 'required',
             'country_id' => 'required',
             'name'       => 'required',
             'email'      => 'required',
             'phone'      => 'required',
             'address'    => 'required',
-            'image'      => 'required'
          ]);
 
         if($validator->fails()){
@@ -137,13 +134,12 @@ class ClientController extends BaseController
         //     return $this->sendError('Client Does Not Belong To You !!');
         // }
 
-         $client->user_id     = $input['user_id'];
          $client->country_id  = $input['country_id'];
          $client->name        = $input['name'];
          $client->email       = $input['email'];
          $client->phone       = $input['phone'];
          $client->address     = $input['address'];
-         $client->image       = $input['image'];
+         $client->filedata    = $input['file'];
 
          $client->update();
 

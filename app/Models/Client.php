@@ -14,7 +14,7 @@ class Client extends Model
     use HasFactory,SoftDeletes,Uuids;
 
 
-    protected $fillable=['user_id','country_id','name','email','phone','address','image'];
+    protected $fillable=['user_id','country_id','name','email','phone','address','file','filedata'];
 
     public function user()
     {

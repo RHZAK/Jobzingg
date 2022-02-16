@@ -20,6 +20,50 @@ class UserController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function resetPassword(Request $request){
+
+        $input=$request->all();
+
+        $validator=validator::make($input,[
+            'oldpass' => 'required',
+            'newpass'  => 'required',
+            'confirmpass'  => 'required',
+         ]);
+
+         if ($validator->fails()) {
+
+            return response()->json($validator->error, 404);
+        }
+
+        $user = User::where('email',Auth::user()->email)->first();
+
+        if ($user) {
+
+            if (Hash::check($request->oldpass, $user->password)) {
+
+                if($request->newpass == $request->confirmpass){
+                        $user->password=Hash::make($request->confirmpass);
+
+                        $user->update();
+
+                        $response = ["success" => "Password reset"];
+                        return response($response, 200);
+                }else{
+                        $response = ["failed" => "Password Confirmation incorrect"];
+                        return response($response, 404);
+                }
+
+            }else{
+                $response = ["failed" => "Password incorrect"];
+                return response($response, 404);
+            }
+        }
+
+
+    }
+
+
     public function index()
     {
         $user_List=User::all();
@@ -35,47 +79,12 @@ class UserController extends BaseController
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
 
 
-
-    public function login_test(Request $request){
-
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
-            // $user = CentralUser::where('email', $email)->with('tenants')->first();
-            // $user = Auth::user();
-            // $success['token'] =  $user->createToken('MyApp')-> accessToken;
-            // return $this->send_Response($success, 200);
-            return true;
-        }
-        else{
-            return 'false';
-            // return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
-        }
-    }
-
-    public function login(Request $request)
+    public function show()
     {
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
-            $user = Auth::user();
-            $success['token'] =  $user->createToken('MyApp')-> accessToken;
-
-            return $this->send_Response($success, 200);
-        }
-        else{
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
-        }
-    }
-
-
-
-    public function show($id)
-    {
-        $user=user::find($id);
+        $authuser=Auth::user()->id;
+        $user=user::find($authuser);
 
         if(is_null($user)){
 
@@ -89,9 +98,10 @@ class UserController extends BaseController
     }
 
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $user=user::find($id);
+        $authuser=Auth::user()->id;
+        $user=user::find($authuser);
 
         if(is_null($user)){
             return response()->json($user,404);
@@ -103,7 +113,7 @@ class UserController extends BaseController
             'first_name' => 'required',
             'last_name'  => 'required',
             'email'      => 'required',
-            'password'   => 'required'
+            // 'password'   => 'required'
          ]);
 
         if($validator->fails()){
@@ -113,7 +123,7 @@ class UserController extends BaseController
          $user->first_name = $input['first_name'];
          $user->last_name  = $input['last_name'];
          $user->email      = $input['email'];
-         $user->password   = $input['password'];
+        //  $user->password   = $input['password'];
 
          $user->update();
 

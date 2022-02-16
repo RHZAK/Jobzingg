@@ -14,15 +14,16 @@ Route::group([
     Route::middleware('auth:api')->group(function () {
         /** Users Routes */
         Route::get('userlist', 'API\UserController@index');
-        Route::get('usershow/{id}', 'API\UserController@show');
-        Route::get('userupdate/{id}', 'API\UserController@update');
+        Route::get('usershow', 'API\UserController@show');
+        Route::post('userupdate', 'API\UserController@update');
+        Route::post('resetPassword', 'API\UserController@resetPassword');
         Route::get('userdelete/{id}', 'API\UserController@softDeletes');
         /** Clients Routes */
         Route::get('clientlist', 'API\ClientController@index');
         Route::post('clientstore', 'API\ClientController@store');
         Route::get('clientshow/{id}', 'API\ClientController@show');
         Route::get('userclientshow', 'API\ClientController@userclient');
-        Route::put('clientupdate/{id}', 'API\ClientController@update');
+        Route::post('clientupdate/{id}', 'API\ClientController@update');
         Route::get('clientdelete/{id}', 'API\ClientController@softDeletes');
         /** ContactClients Routes */
         Route::get('contactclientlist', 'API\ContactClientController@index');
@@ -43,7 +44,7 @@ Route::group([
         Route::get('usercandidate', 'API\candidateController@usercandidate');
         Route::post('candidatestore', 'API\candidateController@store');
         Route::get('candidateshow/{id}', 'API\candidateController@show');
-        Route::put('candidateupdate/{id}', 'API\candidateController@update');
+        Route::post('candidateupdate/{id}', 'API\candidateController@update');
         Route::get('candidatedelete/{id}', 'API\candidateController@softDeletes');
         /** Activities Routes */
         Route::get('activitylist', 'API\ActivityController@index');
@@ -101,6 +102,9 @@ Route::group([
         Route::post('importclient', 'API\clientController@importclient');
         Route::post('importcandidate', 'API\CandidateController@importcandidate');
         Route::post('importcontactclient', 'API\ContactClientController@importcontactclient');
+        //Export
+        Route::get('exportclient-excel', 'API\ClientController@exportExcel');
+        Route::get('exportcandidate-excel', 'API\CandidateController@exportExcel');
 
     });
 
@@ -115,6 +119,4 @@ Route::post('userlogin', 'API\CentralUserController@login');
 
 Route::get('userlist', 'API\UserController@index');
 
-//Export
-Route::get('exportclient-excel', 'API\ClientController@exportExcel');
-Route::get('exportcandidate-excel', 'API\CandidateController@exportExcel');
+

@@ -21,7 +21,8 @@ class CreateCandidatesTable extends Migration
             $table->string('phone');
             $table->string('email');
             $table->string('address');
-            $table->string('image');
+            $table->string('file')->nullable();
+            $table->text('filedata')->nullable();
             $table->enum('gender',['Male','Female']);
             $table->string('birthday');
             $table->integer('year_first_experience');

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+use function PHPUnit\Framework\isNull;
+
 class ActivityController extends BaseController
 {
       /**
@@ -60,7 +62,7 @@ class ActivityController extends BaseController
         'type'         => 'required',
         'date'         => 'required',
         'time'         => 'required',
-        'online_url'   => 'required',
+        // 'online_url'   => 'required',
         'importance'   => 'required',
        ]);
 
@@ -71,16 +73,30 @@ class ActivityController extends BaseController
            return response()->json($Activity_Create_Check,404);
 
        }
-           $add=Activity::create([
-            "user_id"      => Auth::user()->id,
-            'candidate_id' => $request->candidate_id,
-            'title'        => $request->title,
-            'type'         => $request->type,
-            'date'         => $request->date,
-            'time'         => $request->time,
-            'online_url'   => $request->online_url,
-            'importance'   => $request->importance,
-        ]);
+        if(isNull($request->online_url)){
+           $url="";
+        }else{
+            $url=$request->online_url;
+        }
+
+        $count=count($request->candidate_id);
+        $cid=$request->candidate_id;
+        $i=0;
+        
+        while($i<$count){
+            $add=Activity::create([
+                "user_id"      => Auth::user()->id,
+                'candidate_id' => $cid[$i],
+                'title'        => $request->title,
+                'type'         => $request->type,
+                'date'         => $request->date,
+                'time'         => $request->time,
+                'online_url'   => $url,
+                'importance'   => $request->importance,
+            ]);
+            $i++;
+        }
+
            return response()->json($add,200);
    }
 

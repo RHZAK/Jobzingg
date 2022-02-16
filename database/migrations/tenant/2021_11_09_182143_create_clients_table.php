@@ -21,15 +21,14 @@ class CreateClientsTable extends Migration
             $table->string('email')->unique();
             $table->string('phone');
             $table->string('address');
-            $table->string('image');
+            $table->string('file')->nullable();
+            $table->text('filedata')->nullable();
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
-
         });
     }
-
     /**
      * Reverse the migrations.
      *

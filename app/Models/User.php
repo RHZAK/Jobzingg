@@ -21,7 +21,7 @@ class User extends Model implements Syncable
     protected $guarded = [];
     public $timestamps = false;
 
-    protected $fillable = ['first_name', 'last_name', 'email', 'password'];
+    protected $fillable = ['first_name', 'last_name', 'email', 'password','file','filedata'];
 
 
     public function getGlobalIdentifierKey()

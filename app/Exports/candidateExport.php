@@ -10,7 +10,7 @@ class candidateExport implements FromCollection,WithHeadings
 {
 
     public function headings():array{
-        return ['Name','Phone','Email','Address','Description','Gender','BirthDay','Year Experience','Nationality'];
+        return ['Name','Phone','Email','Address','Gender','BirthDay','Year Experience','Nationality'];
     }
 
     public function collection()
